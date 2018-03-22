@@ -142,7 +142,7 @@ class MediaPlayer extends React.PureComponent {
     return val;
   }
   
-  seekTo = (time = 0) => {
+  seekTo(time = 0) {
     if (time > this.state.duration) {
       return;
     }
