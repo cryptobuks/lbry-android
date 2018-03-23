@@ -80,7 +80,7 @@ class AppWithNavigationState extends React.Component {
         NativeModules.DaemonServiceControl) {
       if (!keepDaemonRunning) {
         // terminate the daemon background service when is suspended / inactive 
-        NativeModules.DaemonServiceControl.stopService();
+        // NativeModules.DaemonServiceControl.stopService(); // moved to onDestory in activity for better handling
       }
     }
   }

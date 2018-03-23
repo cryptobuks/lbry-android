@@ -1,6 +1,6 @@
 import React from 'react';
 import { SETTINGS } from 'lbry-redux';
-import { Text, View, ScrollView, Switch } from 'react-native';
+import { Text, View, ScrollView, Switch, NativeModules } from 'react-native';
 import settingsStyle from '../../styles/settings';
 
 class SettingsPage extends React.PureComponent {
@@ -25,7 +25,12 @@ class SettingsPage extends React.PureComponent {
               <Text style={settingsStyle.description}>Enable this option for quicker app launch and to keep the synchronisation with the blockchain up to date.</Text>
             </View>
             <View style={settingsStyle.switchContainer}>
-              <Switch value={keepDaemonRunning} onValueChange={(value) => setClientSetting(SETTINGS.KEEP_DAEMON_RUNNING, value)} />
+              <Switch value={keepDaemonRunning} onValueChange={(value) => {
+                setClientSetting(SETTINGS.KEEP_DAEMON_RUNNING, value);
+                if (NativeModules.DaemonServiceControl) {
+                  NativeModules.DaemonServiceControl.updateKeepDaemonRunning(value);
+                }
+              }} />
             </View>
           </View>
         </ScrollView>

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.provider.Settings;
 
@@ -23,6 +24,8 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
     
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
+    
+    public static final String SHARED_PREFERENCES_NAME = "LBRY";
     
     /**
      * Flag which indicates whether or not the service is running. Will be updated in the
@@ -105,8 +108,18 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
     
     @Override
     protected void onDestroy() {
+        // check service running setting and end it here
+        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        boolean shouldKeepDaemonRunning = sp.getBoolean("keepDaemonRunning", true);
+        if (!shouldKeepDaemonRunning) {
+            serviceRunning = isServiceRunning(LbrynetService.class);
+            if (serviceRunning) {
+               ServiceHelper.stop(this, LbrynetService.class);
+            }
+        }
+      
         super.onDestroy();
-    
+        
         if (mReactInstanceManager != null) {
             mReactInstanceManager.onHostDestroy(this);
         }

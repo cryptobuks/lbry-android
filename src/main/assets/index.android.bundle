@@ -74652,9 +74652,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
         var keepDaemonRunning = _this.props.keepDaemonRunning;
 
         if (_reactNative.AppState.currentState && _reactNative.AppState.currentState.match(/inactive|background/) && _reactNative.NativeModules.DaemonServiceControl) {
-          if (!keepDaemonRunning) {
-            _reactNative.NativeModules.DaemonServiceControl.stopService();
-          }
+          if (!keepDaemonRunning) {}
         }
       }, _temp), babelHelpers.possibleConstructorReturn(_this, _ret);
     }
@@ -77730,7 +77728,11 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 _react2.default.createElement(_reactNative.Switch, {
                   value: keepDaemonRunning,
                   onValueChange: function onValueChange(value) {
-                    return setClientSetting(_lbryRedux.SETTINGS.KEEP_DAEMON_RUNNING, value);
+                    setClientSetting(_lbryRedux.SETTINGS.KEEP_DAEMON_RUNNING, value);
+
+                    if (_reactNative.NativeModules.DaemonServiceControl) {
+                      _reactNative.NativeModules.DaemonServiceControl.updateKeepDaemonRunning(value);
+                    }
                   },
                   __source: {
                     fileName: _jsxFileName,
